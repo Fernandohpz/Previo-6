@@ -1,0 +1,56 @@
+---------------------------------------------
+OSHONSOFT Z80 ASSEMBLER LISTING
+Line   Addr Opcode      Label   Instruction
+---------------------------------------------
+0001   0000              ORG 0000H ;Line modified by ASM preprocessor (ORG correction): ORG 0000H                  ; Define la dirección de inicio
+0002   0000             
+0003   0000 31 FF 27    INICIO: LD SP,27FFH        ; Inicia la localidad de la pila
+0004   0003 3E 89               LD A,089H          ; PA = Salida, PB = Salida y PC = Entrada
+0005   0005 D3 03               OUT (03H),A        ; Envía al puerto de control
+0006   0007 3E 00               LD A,00H           ; Limpia la localidad 2000H
+0007   0009 32 00 20            LD (2000H),A
+0008   000C CD 1C 00            CALL CHECA         ; Checa el código generado por el teclado
+0009   000F             
+0010   000F 3A 00 20    CICLO:  LD A,(2000H)       ; Carga en el acumulador el último dato almacenado
+0011   0012 E6 0F               AND 0FH            ; Enmascara para mostrar solo los 4 bits menos significativos
+0012   0014 D3 00               OUT (00H),A        ; Saca el dato al puerto A
+0013   0016 CD 1C 00            CALL CHECA
+0014   0019 C3 0F 00            JP CICLO           ; Repite el ciclo de forma infinita
+0015   001C             
+0016   001C DB 02       CHECA:  IN A,(02H)         ; Inserta el dato del teclado desde el puerto C
+0017   001E E6 7F               AND 7FH            ; Limpia el bit más significativo
+0018   0020 FE 7F               CP  7FH            ; Compara con 7FH para ver si hay tecla presionada
+0019   0022 C8                  RET Z              ; Si no hay tecla presionada, regresa
+0020   0023 26 00               LD H,00H
+0021   0025 6F                  LD L,A
+0022   0026 7E                  LD A,(HL)          ; Accede a la localidad sobre la tabla
+0023   0027 E6 0F               AND 0FH            ; Enmascara para obtener solo los 4 bits menos significativos
+0024   0029 32 00 20            LD (2000H),A       ; Guarda el dato en la memoria
+0025   002C C9                  RET
+0026   002D             
+0027   002D                     ORG 37H
+0028   0037 01                  DB 01H             ; Tabla de asignación de valores para cada tecla
+0029   0038                     ORG 57H
+0030   0057 02                  DB 02H
+0031   0058                     ORG 67H
+0032   0067 03                  DB 03H
+0033   0068                     ORG 3BH
+0034   003B 04                  DB 04H
+0035   003C                     ORG 5BH
+0036   005B 05                  DB 05H
+0037   005C                     ORG 6BH
+0038   006B 06                  DB 06H
+0039   006C                     ORG 3DH
+0040   003D 07                  DB 07H
+0041   003E                     ORG 5DH
+0042   005D 08                  DB 08H
+0043   005E                     ORG 6DH
+0044   006D 09                  DB 09H
+0045   006E                     ORG 3EH
+0046   003E 0A                  DB 0AH
+0047   003F                     ORG 5EH
+0048   005E 00                  DB 00H
+0049   005F                     ORG 6EH
+0050   006E 0B                  DB 0BH
+0051   006F                     END
+Number of errors = 0
